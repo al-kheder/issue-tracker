@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Table } from "@radix-ui/themes";
 import Link from "next/link";
 import prisma from "@/prisma/client";
+import IssueStatusBage from "../components/IssueStatusBage";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -32,10 +33,13 @@ const IssuesPage = async () => {
               <Table.Row key={issue.id}>
                 <Table.RowHeaderCell>
                   {issue.title}
-                  <div className="block md:hidden">{issue.status}</div>
+                  <div className="block md:hidden">
+                    {" "}
+                    <IssueStatusBage status={issue.status} />
+                  </div>
                 </Table.RowHeaderCell>
                 <Table.Cell className="hidden md:table-cell">
-                  {issue.status}
+                  <IssueStatusBage status={issue.status} />
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
                   {issue.createdAt.toDateString()}
