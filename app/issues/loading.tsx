@@ -8,7 +8,6 @@ const LoadingIssuePage = () => {
   const issues = [1, 2, 3, 4, 5, 6];
   return (
     <div>
-      {" "}
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>

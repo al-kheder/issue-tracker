@@ -18,12 +18,7 @@ const statusMap: Record<
 
 const IssueStatusBage = ({ status }: { status: Status }) => {
   const { label, color, icon } = statusMap[status];
-  return (
-    <Badge color={color as any}>
-      {icon}
-      {label}
-    </Badge>
-  );
+  return <Badge color={color as any}>{label}</Badge>;
 };
 
 export default IssueStatusBage;
