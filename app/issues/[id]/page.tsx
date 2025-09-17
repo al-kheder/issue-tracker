@@ -1,4 +1,4 @@
-import { IssuesButton } from "@/app/components/index";
+import { DateDisplay, IssuesButton } from "@/app/components/index";
 import DeleteButton from "@/app/components/DeletButton";
 import prisma from "@/prisma/client";
 import {
@@ -134,42 +134,36 @@ const IssueDetailsPage = async ({ params: { id } }: Props) => {
                 <span className="font-medium">Issue #{issueDetail.id}</span>
               </div>
               <div className="flex items-center gap-2">
-                <ClockIcon className="h-4 w-4" />
-                <span>
-                  Created
-                  {issueDetail.createdAt.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+                <DateDisplay
+                  date={issueDetail.createdAt}
+                  type="created"
+                  prefix="Created"
+                  icon={<ClockIcon className="h-4 w-4" />}
+                />
               </div>
               {issueDetail.updatedAt &&
                 issueDetail.updatedAt !== issueDetail.createdAt && (
                   <div className="flex items-center gap-2">
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    <span>
-                      Updated{" "}
-                      {issueDetail.updatedAt.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
+                    <DateDisplay
+                      date={issueDetail.updatedAt}
+                      type="updated"
+                      prefix="Updated"
+                      icon={
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                      }
+                    />
                   </div>
                 )}
             </div>

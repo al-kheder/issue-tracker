@@ -1,17 +1,19 @@
 "use client";
-import { Button, TextField } from "@radix-ui/themes";
-import "easymde/dist/easymde.min.css";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Button, TextField } from "@radix-ui/themes";
 import axios from "axios";
+import "easymde/dist/easymde.min.css";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
-import { createIssueSchema, CreateIssueData } from "@/lib/validations";
-import { ErrorAlert, SuccessAlert } from "../../components/AlertMasseges";
-import { SimpleMDE } from "../../components/SimpleMDE";
-import Spiner from "@/app/components/Spiner";
-import { IssuesButton } from "@/app/components";
+import { CreateIssueData, createIssueSchema } from "@/lib/validations";
+import {
+  ErrorAlert,
+  SuccessAlert,
+  SimpleMDE,
+  IssuesButton,
+} from "@/app/components/index";
 
 const NewIssuePage = () => {
   const router = useRouter();
