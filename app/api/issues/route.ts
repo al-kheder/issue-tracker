@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/prisma/client';
 import { createIssueSchema } from '@/lib/validations';
 
+interface DeleteProps{
+    params:{
+        id:string
+    }
+}
+
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
@@ -49,3 +55,4 @@ export async function GET() {
         );
     }
 }
+
