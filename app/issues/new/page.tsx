@@ -11,6 +11,7 @@ import { createIssueSchema, CreateIssueData } from "@/lib/validations";
 import { ErrorAlert, SuccessAlert } from "../../components/AlertMasseges";
 import { SimpleMDE } from "../../components/SimpleMDE";
 import Spiner from "@/app/components/Spiner";
+import { IssuesButton } from "@/app/components";
 
 const NewIssuePage = () => {
   const router = useRouter();
@@ -92,10 +93,12 @@ const NewIssuePage = () => {
             </p>
           )}
         </div>
-
-        <Button type="submit" disabled={isSubmitting} className="w-full">
-          {isSubmitting ? "Creating Issue..." : "Submit New Issue"}
-        </Button>
+        <div className="flex justify-between">
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? "Creating Issue..." : "Submit New Issue"}
+          </Button>
+          <IssuesButton />
+        </div>
       </form>
     </div>
   );

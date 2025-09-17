@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { IssuesButton } from "@/app/components/index";
+import DeleteButton from "@/app/components/DeletButton";
+import prisma from "@/prisma/client";
 import {
   ArrowLeftIcon,
   ClockIcon,
@@ -13,10 +15,9 @@ import {
   Section,
   Text,
 } from "@radix-ui/themes";
-import prisma from "@/prisma/client";
-import { notFound } from "next/navigation";
 import delay from "delay";
-import DeleteButton from "@/app/components/DeletButton";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -98,15 +99,7 @@ const IssueDetailsPage = async ({ params: { id } }: Props) => {
       <Container className="max-w-6xl mx-auto px-4 py-4">
         {/* Back Button */}
         <div>
-          <Link href="/issues">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2 hover:bg-gray-100 transition-colors"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Back to Issues
-            </Button>
-          </Link>
+          <IssuesButton />
         </div>
 
         {/* Hero Section */}
