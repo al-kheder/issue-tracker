@@ -1,9 +1,14 @@
 
-export {default as Link} from './Link';
-export{SuccessAlert,ErrorAlert}from './AlertMasseges';
-export {SimpleMDE}from './SimpleMDE'; 
-export {default as IssueStatusBage}from './IssueStatusBage';
-export {default as IssuesButton} from './IssuesButton';
-export {default as  DateDisplay} from './DateDisplay'
+export { default as ActionButton } from './ActionButton';
+export { ErrorAlert, SuccessAlert } from './AlertMasseges';
+export { default as DateDisplay } from './DateDisplay';
+export { default as IssuesButton } from './IssuesButton';
+export { default as IssueStatusBage } from './IssueStatusBage';
+export { default as Link } from './Link';
+export { SimpleMDE } from './SimpleMDE';
+
+export { IssueActions } from './IssueActions';
+export { IssueDescription } from './IssueDescription';
+export { IssueHeroSection } from './IssueHeroSection';
 
 

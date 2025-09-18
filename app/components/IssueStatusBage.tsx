@@ -1,24 +1,16 @@
-import { Status } from "@prisma/client";
-import { Badge, Flex } from "@radix-ui/themes";
-import React from "react";
-import {
-  CrossCircledIcon,
-  ClockIcon,
-  CheckCircledIcon,
-} from "@radix-ui/react-icons";
+import { Badge } from "@radix-ui/themes";
+import { getStatusConfig } from "@/lib/utils/issueStatus";
 
-const statusMap: Record<
-  Status,
-  { label: string; color: string; icon: React.ReactNode }
-> = {
-  OPEN: { label: "Open", color: "red", icon: <CrossCircledIcon /> },
-  IN_PROGRESS: { label: "In Progress", color: "violet", icon: <ClockIcon /> },
-  CLOSED: { label: "Closed", color: "green", icon: <CheckCircledIcon /> },
-};
+interface IssueStatusBadgeProps {
+  status: string;
+}
 
-const IssueStatusBage = ({ status }: { status: Status }) => {
-  const { label, color, icon } = statusMap[status];
-  return <Badge color={color as any}>{label}</Badge>;
-};
+export default function IssueStatusBadge({ status }: IssueStatusBadgeProps) {
+  const config = getStatusConfig(status);
 
-export default IssueStatusBage;
+  return (
+    <Badge color={config.color} variant="soft" className="mb-2">
+      {config.label}
+    </Badge>
+  );
+}
