@@ -9,16 +9,22 @@ import { Box, Container } from "@radix-ui/themes";
 import delay from "delay";
 
 interface Props {
-  params: {
+  params: Promise<{
+    // ✅ Changed to Promise
     id: string;
-  };
+  }>;
 }
 
-const IssueDetailsPage = async ({ params: { id } }: Props) => {
+const IssueDetailsPage = async ({ params }: Props) => {
+  // ✅ Don't destructure here
+  // ✅ AWAIT params first, then destructure
+  const { id } = await params;
+
+  // ✅ Rest of your code stays the same
   const issueId = validateIssueId(id);
   const issueDetail = await getIssueById(issueId);
   await delay(500);
-  
+
   return (
     <Box className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl">
       <Container className="max-w-6xl mx-auto px-4 py-4">
