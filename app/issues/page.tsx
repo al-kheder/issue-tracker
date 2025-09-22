@@ -1,7 +1,7 @@
 import React from "react";
-import { Table } from "@radix-ui/themes";
+import { Section, Table } from "@radix-ui/themes";
 import prisma from "@/prisma/client";
-import { IssueStatusBage, Link } from "@/app/components/index";
+import { DemoBanner, IssueStatusBage, Link } from "@/app/components/index";
 import delay from "delay";
 import IssueActions from "./IssueActions";
 
@@ -45,6 +45,9 @@ const IssuesPage = async () => {
           })}
         </Table.Body>
       </Table.Root>
+      <Section>
+        <DemoBanner />
+      </Section>
     </>
   );
 };

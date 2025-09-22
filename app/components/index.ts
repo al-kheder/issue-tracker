@@ -11,4 +11,7 @@ export { IssueActions } from './IssueActions';
 export { IssueDescription } from './IssueDescription';
 export { IssueHeroSection } from './IssueHeroSection';
 
+export { demoMessages, getRandomDemoMessage } from './FloatingToasNotification';
+export {default as DemoBanner} from './DemoBanner'
+
 

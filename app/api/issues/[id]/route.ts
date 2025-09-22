@@ -3,30 +3,25 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { updateIssueSchema } from "@/lib/validations";
+import { getIssueById, validateIssueId } from "@/lib/data/issue";
 
-interface DeleteProps {
+interface Props {
   params: {
     id: string;
   };
 }
 
-interface EditProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+
 
 export async function DELETE(
-    request:NextRequest,{params:{id}}:DeleteProps
+    request:NextRequest,{params:{id}}:Props
 ){
 try {
-    const issueId = parseInt(id);
-    if(isNaN(issueId) || issueId<=0)
+    const issueId = validateIssueId(id)
+    if(!issueId)
         return NextResponse.json({error:"Invalid issue ID"},{status:400})
 
-    const existingIssue = await prisma.issue.findUnique({
-        where:{id:issueId}
-    });
+    const existingIssue =getIssueById(issueId)
 
     if(!existingIssue) return NextResponse.json({error:"Issue not found"},{status:404})
 
@@ -56,24 +51,14 @@ try {
 
 export async function PATCH(
   request: NextRequest,
-  { params }: EditProps
+  { params:{id} }: Props
 ) {
   console.log("🔥 PATCH request received"); // ✅ Debug log
   
   try {
-    // ✅ Get and validate ID
-    const { id } = await params;
-    console.log("📋 Issue ID:", id); // ✅ Debug log
-    
-    const issueId = parseInt(id);
-    
-    if (isNaN(issueId) || issueId <= 0) {
-      console.log("❌ Invalid issue ID:", id); // ✅ Debug log
-      return NextResponse.json(
-        { error: "Invalid issue ID" },
-        { status: 400 }
-      );
-    }
+    const issueId = validateIssueId(id)
+    if(!issueId)
+        return NextResponse.json({error:"Invalid issue ID"},{status:400})
 
     // ✅ Get request body
     const body = await request.json();
@@ -95,9 +80,7 @@ export async function PATCH(
     console.log("✅ Validation passed:", validation.data); // ✅ Debug log
 
     // ✅ Check if issue exists
-    const existingIssue = await prisma.issue.findUnique({
-      where: { id: issueId }
-    });
+    const existingIssue =getIssueById(issueId)
 
     if (!existingIssue) {
       console.log("❌ Issue not found:", issueId); // ✅ Debug log
