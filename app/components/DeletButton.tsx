@@ -46,7 +46,7 @@ const DeleteButton = ({ issueId }: DeleteButtonProps) => {
           variant="soft"
           color="red"
           size="3"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 cursor-pointer"
           disabled={isDeleting}
         >
           <svg

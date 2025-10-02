@@ -5,7 +5,7 @@ import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, FieldErrors } from "react-hook-form";
 
 import {
   CreateIssueData,
@@ -34,25 +34,29 @@ const IssueForm = ({ issue }: Props) => {
   // ✅ Determine if we're editing or creating
   const isEditing = !!issue;
 
-  // ✅ Use appropriate schema based on mode
+  // ✅ Use conditional schema and types
+  const schema = isEditing ? updateIssueSchema : createIssueSchema;
+  type FormData = typeof isEditing extends true
+    ? UpdateIssueData
+    : CreateIssueData;
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<CreateIssueData | UpdateIssueData>({
-    resolver: zodResolver(isEditing ? updateIssueSchema : createIssueSchema),
+  } = useForm<Issue extends undefined ? CreateIssueData : UpdateIssueData>({
+    resolver: zodResolver(schema),
     defaultValues: isEditing
-      ? {
+      ? ({
           title: issue.title,
           description: issue.description || "",
           status: issue.status,
-        }
-      : {
+        } as UpdateIssueData)
+      : ({
           title: "",
           description: "",
-          status: "OPEN",
-        },
+        } as CreateIssueData),
   });
 
   // ✅ Handle both create and update
@@ -73,6 +77,8 @@ const IssueForm = ({ issue }: Props) => {
         setSuccess("Issue created successfully!");
       }
 
+      console.log("Response:", response.data);
+
       // ✅ Redirect after success
       setTimeout(() => {
         if (isEditing) {
@@ -81,7 +87,7 @@ const IssueForm = ({ issue }: Props) => {
           router.push("/issues"); // Go to issues list
         }
         router.refresh(); // Refresh to show updated data
-      }, 1500);
+      }, 500);
     } catch (error) {
       console.error("Submission error:", error);
 
@@ -91,7 +97,7 @@ const IssueForm = ({ issue }: Props) => {
           const errorMessage =
             error.response.data?.error ||
             `Failed to ${isEditing ? "update" : "create"} issue`;
-          setError(errorMessage);
+          setError(errorMessage); // ✅ Fixed variable name
         } else if (error.request) {
           // ✅ Network error
           setError("No response from server. Please check your connection.");
@@ -154,16 +160,17 @@ const IssueForm = ({ issue }: Props) => {
               Status
             </label>
             <select
-              {...register("status")}
+              {...register("status" as keyof FormData)}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="OPEN">Open</option>
               <option value="IN_PROGRESS">In Progress</option>
               <option value="CLOSED">Closed</option>
             </select>
-            {errors.status && (
+            {/* ✅ Type assertion for errors in edit mode */}
+            {(errors as FieldErrors<UpdateIssueData>).status && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.status.message}
+                {(errors as FieldErrors<UpdateIssueData>).status?.message}
               </p>
             )}
           </div>
@@ -188,7 +195,7 @@ const IssueForm = ({ issue }: Props) => {
               if (isEditing) {
                 router.push(`/issues/${issue.id}`); // Go back to issue details
               } else {
-                router.push("/issues"); // Go back to issues list
+                router.push("/issues"); // Go to issues list
               }
             }}
             disabled={isSubmitting}

@@ -1,22 +1,23 @@
-// Delete issue 
 
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { updateIssueSchema } from "@/lib/validations";
 import { getIssueById, validateIssueId } from "@/lib/data/issue";
+import { issue } from "@uiw/react-md-editor";
 
 interface Props {
-  params: {
+  params: Promise<{  // ✅ Add Promise here too
     id: string;
-  };
+  }>;
 }
 
 
-
+// DELETE ISSUE
 export async function DELETE(
-    request:NextRequest,{params:{id}}:Props
+    request:NextRequest,{params}:Props
 ){
 try {
+  const { id } = await params;
     const issueId = validateIssueId(id)
     if(!issueId)
         return NextResponse.json({error:"Invalid issue ID"},{status:400})
@@ -28,10 +29,7 @@ try {
     await prisma.issue.delete({
         where:{id:issueId}
     })
-    
-
     return NextResponse.json({message:"Issue deleted successfully"},{status:200})
-
 
 } catch (error) {
      console.error("Delete error:", error);
@@ -43,19 +41,15 @@ try {
 
 }
 
-
-
-//Edite Issue
-
-
-
+//EDIT ISSUE
 export async function PATCH(
   request: NextRequest,
-  { params:{id} }: Props
+  { params }: Props
 ) {
   console.log("🔥 PATCH request received"); // ✅ Debug log
   
   try {
+    const { id } = await params;
     const issueId = validateIssueId(id)
     if(!issueId)
         return NextResponse.json({error:"Invalid issue ID"},{status:400})
@@ -71,7 +65,7 @@ export async function PATCH(
       return NextResponse.json(
         { 
           error: "Validation failed", 
-          details: validation.error.errors 
+          details: validation.error.issues
         },
         { status: 400 }
       );
@@ -106,9 +100,12 @@ export async function PATCH(
     return NextResponse.json(updatedIssue, { status: 200 });
 
   } catch (error) {
+
     console.error("💥 Update error:", error); // ✅ Debug log
+    // ✅ Fix: Properly handle the unknown error type
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return NextResponse.json(
-      { error: "Failed to update issue", details: error.message },
+      { error: "Failed to update issue", details:errorMessage },
       { status: 500 }
     );
   }

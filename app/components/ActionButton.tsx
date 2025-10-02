@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -6,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 
-type ActionType = "new" | "edit" | "delete";
+/* type ActionType = "new" | "edit" | "delete"; */
+enum ActionType {
+  NEW = "new",
+  EDIT = "edit",
+  DELETE = "delete",
+}
 
 interface ActionButtonProps {
   action: ActionType;
@@ -34,7 +38,7 @@ const ActionButton = ({
 
   // ✅ Configuration for each action type
   const actionConfig = {
-    new: {
+    [ActionType.NEW]: {
       label: "Create New Issue",
       icon: <PlusIcon className="h-5 w-5" />,
       color: "blue" as const,
@@ -42,7 +46,7 @@ const ActionButton = ({
       confirmDialog: false,
       href: href || "/issues/new",
     },
-    edit: {
+    [ActionType.EDIT]: {
       label: "Edit Issue",
       icon: (
         <svg
@@ -64,7 +68,7 @@ const ActionButton = ({
       confirmDialog: false,
       href: href || (issueId ? `/issues/${issueId}/edit` : "/issues"),
     },
-    delete: {
+    [ActionType.DELETE]: {
       label: "Delete Issue",
       icon: (
         <svg
