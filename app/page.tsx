@@ -10,6 +10,7 @@ import {
 import { PlusIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import prisma from "@/prisma/client";
 import FeaturedCard from "./components/FeaturedCard";
+import { useSession } from "next-auth/react";
 
 const features = [
   {
