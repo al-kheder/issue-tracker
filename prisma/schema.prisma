@@ -29,10 +29,10 @@ enum Status {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  username      String?         @unique
-  email         String?         @unique
+  username      String?   @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -41,10 +41,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 // ...existing code...
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String  // Remove @unique here
+  userId                   String // Remove @unique here
   type                     String
   provider                 String
   providerAccountId        String
@@ -64,6 +65,7 @@ model Account {
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
+
 // ...existing code...
 
 model Session {
@@ -79,6 +81,10 @@ model Session {
   @@index([userId])
 }
 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
 
-
-
+  @@id([identifier, token])
+}
