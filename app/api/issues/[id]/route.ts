@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { updateIssueSchema } from "@/lib/validations";
 import { getIssueById, validateIssueId } from "@/lib/data/issue";
 import { issue } from "@uiw/react-md-editor";
+import { auth } from "@/auth";
 
 interface Props {
   params: Promise<{  // ✅ Add Promise here too
@@ -11,12 +12,14 @@ interface Props {
   }>;
 }
 
+const session = await auth();
 
 // DELETE ISSUE
 export async function DELETE(
     request:NextRequest,{params}:Props
 ){
 try {
+   if(!session) return NextResponse.json({},{status:401})
   const { id } = await params;
     const issueId = validateIssueId(id)
     if(!issueId)
@@ -49,6 +52,7 @@ export async function PATCH(
   console.log("🔥 PATCH request received"); // ✅ Debug log
   
   try {
+          if(!session) return NextResponse.json({},{status:401})
     const { id } = await params;
     const issueId = validateIssueId(id)
     if(!issueId)

@@ -1,59 +1,62 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import  prisma  from "./prisma/client"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter:PrismaAdapter(prisma),
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     })
   ],
-  
+
   session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    strategy: "jwt"
   },
 
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // If user is signing in, go to dashboard
-      // If user is signing out, go to homepage
-      if (url.includes('/api/auth/signout')) {
-        return baseUrl  // Go to homepage after sign-out
-      }
-      
-      // After successful sign-in, go to dashboard
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      else if (new URL(url).origin === baseUrl) return url
-      return `${baseUrl}/dashboard`
-    },
+    // Runs in middleware + server components (used by export { auth as middleware })
+    // Decide gating + redirects here.
+    authorized({ auth, request }) {
+      const loggedIn = !!auth?.user
+      const path = request.nextUrl.pathname
 
-    async session({ session, token }) {
-      if (session.user && token.sub) {
-        session.user.id = token.sub
+      const wantsDashboard =
+        path.startsWith("/dashboard") ||
+        path.startsWith("/issues") ||
+        path.startsWith("/profile") ||
+        path.startsWith("/analytics")
+
+      // Not logged in but requesting protected area -> send to home
+      if (wantsDashboard && !loggedIn) {
+        return Response.redirect(new URL("/", request.nextUrl))
       }
-      return session
+
+      // Logged in but hitting public root -> send to dashboard
+      if (path === "/" && loggedIn) {
+        return Response.redirect(new URL("/dashboard", request.nextUrl))
+      }
+
+      return true
     },
 
     async jwt({ token, account, user }) {
+      // Persist user id (sub already set by provider, but ensure)
       if (account && user) {
         token.sub = user.id
       }
       return token
     },
-  },
 
-  events: {
-    async signIn({ user }) {
-      console.log(`✅ ${user.email} signed in`)
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        // Attach id so client components can read session.user.id
+        ;(session.user as any).id = token.sub
+      }
+      return session
     },
-    async signOut() {
-      console.log(`🚪 User signed out`)
-    }
   },
 
-  debug: process.env.NODE_ENV === 'development',
+
+  debug: process.env.NODE_ENV === "development",
 })

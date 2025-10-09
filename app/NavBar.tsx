@@ -84,11 +84,11 @@ const NavBar = memo(() => {
               </DropdownMenu.Label>
 
               <DropdownMenu.Separator />
-
+              {/* 
               <DropdownMenu.Item asChild>
                 <Link href="/profile">Profile Settings</Link>
-              </DropdownMenu.Item>
-
+              </DropdownMenu.Item>}
+            */}
               <DropdownMenu.Separator />
 
               <DropdownMenu.Item

@@ -1,169 +1,216 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import {
-  Blockquote,
-  Box,
-  Button,
-  Container,
-  Heading,
-  Section,
-} from "@radix-ui/themes";
-import { PlusIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import prisma from "@/prisma/client";
-import FeaturedCard from "./components/FeaturedCard";
-import { useSession } from "next-auth/react";
+import { Card, Flex, Heading, Text, Button } from "@radix-ui/themes";
 
-const features = [
+export default async function HomePage() {
+  const session = await auth();
+  // if (session) redirect("/dashboard")
   {
-    icon: <ExclamationTriangleIcon className="h-6 w-6 text-blue-600" />,
-    title: "Track Issues",
-    description:
-      "Keep track of all your project issues in one centralized location.",
-    bgColor: "bg-blue-100",
-  },
-  {
-    icon: (
-      <svg
-        className="h-6 w-6 text-green-600"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-    ),
-    title: "Manage Status",
-    description:
-      "Update issue status from open to in-progress to closed seamlessly.",
-    bgColor: "bg-green-100",
-  },
-  {
-    icon: (
-      <svg
-        className="h-6 w-6 text-purple-600"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        />
-      </svg>
-    ),
-    title: "Stay Productive",
-    description:
-      "Streamlined workflow to keep your team focused and productive.",
-    bgColor: "bg-purple-100",
-  },
-];
-
-export default async function Home() {
-  const [openCount, inProgressCount, closedCount] = await Promise.all([
-    prisma.issue.count({ where: { status: "OPEN" } }),
-    prisma.issue.count({ where: { status: "IN_PROGRESS" } }),
-    prisma.issue.count({ where: { status: "CLOSED" } }),
-  ]);
-
-  const stats = [
-    {
-      count: openCount,
-      label: "Open Issues",
-      color: "text-red-600",
-    },
-    {
-      count: inProgressCount,
-      label: "In Progress",
-      color: "text-yellow-600",
-    },
-    {
-      count: closedCount,
-      label: "Resolved",
-      color: "text-green-600",
-    },
-  ];
+    session && redirect("/dashboard");
+  }
 
   return (
-    <Box className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-5">
-      <Container className="max-w-6xl mx-auto px-4">
-        {/* Hero Section */}
-        <Section className="text-center">
-          <div className="flex justify-center">
-            <ExclamationTriangleIcon className="h-16 w-16 text-blue-600" />
-          </div>
-
-          <Heading className="text-5xl font-bold text-gray-900 mb-6">
-            Issue Tracker
-          </Heading>
-
-          <Blockquote className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Track, manage, and resolve issues efficiently. Keep your projects
-            organized and your team productive.
-          </Blockquote>
-
-          {/* CTA Buttons */}
-          <Section className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/issues">
-              <Button size="3" className="text-lg px-8 py-3">
-                View All Issues
-              </Button>
-            </Link>
-
-            <Link href="/issues/new">
-              <Button
-                variant="outline"
-                size="3"
-                className="text-lg px-8 py-3 flex items-center gap-2"
-              >
-                <PlusIcon className="h-5 w-5" />
-                Create New Issue
-              </Button>
-            </Link>
-          </Section>
-        </Section>
-
-        {/* Features Grid */}
-        <Section className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <FeaturedCard
-              key={index}
-              title={feature.title}
-              icon={feature.icon}
-              description={feature.description}
-              bgColor={feature.bgColor}
-            />
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 blur-3xl opacity-40 animate-pulse" />
+        <div className="absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-gradient-to-tr from-amber-200 via-pink-200 to-rose-200 blur-3xl opacity-30 animate-pulse [animation-delay:3s]" />
+      </div>
+      {/* Hero */}
+      <section className="max-w-5xl mx-auto px-6 pt-16 pb-20 text-center space-y-8">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur px-4 py-1 text-sm font-medium shadow-sm border">
+          <span className="text-blue-600">NEW</span> Real‑time issue insights
+          (soon)
+        </div>
+        <Heading size="9" className="tracking-tight leading-[1.05]">
+          Track, Prioritize, and Resolve Issues{" "}
+          <br className="hidden md:block" />
+          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Faster Together
+          </span>
+        </Heading>
+        <Text
+          size="5"
+          color="gray"
+          className="max-w-2xl mx-auto leading-relaxed"
+        >
+          A focused workspace to log bugs, assign teammates, monitor progress,
+          and celebrate shipped fixes. Simple enough to start in seconds.
+          Powerful enough to scale with your project.
+        </Text>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="3" asChild>
+            <Link href="/api/auth/signin">Sign In with Google</Link>
+          </Button>
+          <Button size="3" variant="outline" asChild>
+            <Link href="#features">Explore Features</Link>
+          </Button>
+        </div>
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { label: "Issues Tracked", value: "1,240+" },
+            { label: "Avg. Resolution", value: "2.1d" },
+            { label: "Active Contributors", value: "58" },
+            { label: "Automation Rules", value: "12" },
+          ].map((stat) => (
+            <Card key={stat.label} className="bg-white/70 backdrop-blur">
+              <Flex direction="column" align="center" gap="1" py="3">
+                <Heading size="5">{stat.value}</Heading>
+                <Text size="2" color="gray">
+                  {stat.label}
+                </Text>
+              </Flex>
+            </Card>
           ))}
-        </Section>
+        </div>
+      </section>
 
-        {/* Quick Stats */}
-        <Section className="bg-white rounded-lg p-8 shadow-md">
-          <Heading className="text-2xl font-semibold text-center">
-            Quick Overview
+      {/* Feature Highlights */}
+      <section
+        id="features"
+        className="max-w-6xl mx-auto px-6 pb-20 space-y-12"
+      >
+        <Heading size="7" className="text-center">
+          Why Use This Issue Tracker?
+        </Heading>
+        <div className="grid gap-8 md:grid-cols-3">
+          <Card className="p-6 bg-white/80 backdrop-blur">
+            <div className="text-4xl mb-4">📝</div>
+            <Heading size="4" mb="2">
+              Capture Clearly
+            </Heading>
+            <Text color="gray" size="2">
+              Create structured issues with rich descriptions, ownership, and
+              labels so nothing slips.
+            </Text>
+          </Card>
+          <Card className="p-6 bg-white/80 backdrop-blur">
+            <div className="text-4xl mb-4">👥</div>
+            <Heading size="4" mb="2">
+              Assign & Own
+            </Heading>
+            <Text color="gray" size="2">
+              Assign teammates and instantly see responsibility, status, and
+              next steps.
+            </Text>
+          </Card>
+          <Card className="p-6 bg-white/80 backdrop-blur">
+            <div className="text-4xl mb-4">🚀</div>
+            <Heading size="4" mb="2">
+              Ship Faster
+            </Heading>
+            <Text color="gray" size="2">
+              Prioritize intelligently and remove blockers with a workflow
+              purpose‑built for iteration.
+            </Text>
+          </Card>
+        </div>
+      </section>
+
+      {/* Workflow Strip */}
+      <section className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 text-white">
+        <div className="max-w-6xl mx-auto px-6 py-16 space-y-10">
+          <Heading size="7" className="text-center">
+            A Flow That Matches Your Momentum
           </Heading>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {stats.map((stat, index) => (
-              <div key={index}>
-                <div className={`text-3xl font-bold ${stat.color} mb-2`}>
-                  {stat.count}
+          <div className="grid md:grid-cols-5 gap-6">
+            {[
+              {
+                step: "1",
+                title: "Log",
+                desc: "Create a new issue with context",
+              },
+              {
+                step: "2",
+                title: "Assign",
+                desc: "Pick an owner or leave unassigned",
+              },
+              {
+                step: "3",
+                title: "Prioritize",
+                desc: "Add labels & sort by impact",
+              },
+              {
+                step: "4",
+                title: "Resolve",
+                desc: "Track progress to closure",
+              },
+              { step: "5", title: "Reflect", desc: "Review metrics & improve" },
+            ].map((item) => (
+              <div key={item.step} className="relative">
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center font-semibold">
+                    {item.step}
+                  </span>
+                  <span className="font-medium">{item.title}</span>
                 </div>
-                <div className="text-gray-600">{stat.label}</div>
+                <p className="text-sm text-white/80 leading-relaxed">
+                  {item.desc}
+                </p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-6">
-            <Link href="/issues">
-              <Button variant="ghost">View detailed statistics →</Button>
-            </Link>
-          </div>
-        </Section>
-      </Container>
-    </Box>
+      {/* Use Cases */}
+      <section className="max-w-6xl mx-auto px-6 py-20 space-y-12">
+        <Heading size="7" className="text-center">
+          Use It Your Way
+        </Heading>
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            {
+              icon: "🧪",
+              title: "QA Teams",
+              body: "Surface regressions fast. Keep dev loop tight.",
+            },
+            {
+              icon: "💻",
+              title: "Indie Devs",
+              body: "Stay organized solo without heavy process overhead.",
+            },
+            {
+              icon: "🏢",
+              title: "Product Squads",
+              body: "Coordinate across roles with clear accountability.",
+            },
+          ].map((card) => (
+            <Card
+              key={card.title}
+              className="p-6 hover:shadow-lg transition-shadow bg-white/85 backdrop-blur"
+            >
+              <div className="text-4xl mb-4">{card.icon}</div>
+              <Heading size="4" mb="2">
+                {card.title}
+              </Heading>
+              <Text color="gray" size="2">
+                {card.body}
+              </Text>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Call To Action */}
+      <section className="max-w-4xl mx-auto px-6 pb-24 text-center space-y-6">
+        <Heading size="6">Ready To Eliminate Noise?</Heading>
+        <Text size="3" color="gray">
+          Sign in and start tracking the work that matters. No config. Just
+          flow.
+        </Text>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="3" asChild>
+            <Link href="/api/auth/signin">Start Now</Link>
+          </Button>
+          <Button size="3" variant="outline" asChild>
+            <Link href="/api/auth/signin">Try With a Demo Project</Link>
+          </Button>
+        </div>
+        <p className="text-xs text-gray-500">
+          Google sign‑in only. We store minimal profile data for identification.
+        </p>
+      </section>
+    </div>
   );
 }

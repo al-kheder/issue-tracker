@@ -14,4 +14,6 @@ export { IssueHeroSection } from './IssueHeroSection';
 export { demoMessages, getRandomDemoMessage } from './FloatingToasNotification';
 export {default as DemoBanner} from './DemoBanner'
 
+export {default as QuickStats} from "./QuickState"
+
 

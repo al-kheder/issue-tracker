@@ -2,12 +2,12 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { QuickStats } from "../components/index";
 
 export default async function Dashboard() {
   const session = await auth();
-
-  if (!session) {
-    redirect("/api/auth/signin");
+  {
+    !session && redirect("/api/auth/signin");
   }
 
   return (
@@ -15,7 +15,7 @@ export default async function Dashboard() {
       {/* Welcome Header */}
       <Card className="p-6">
         <Flex direction="column" gap="2">
-          <Heading size="6">Welcome back, {session.user?.name}! 👋</Heading>
+          <Heading size="6">Welcome back, {session!.user?.name}! 👋</Heading>
           <Text color="gray">
             Ready to manage your issues? Here's your dashboard.
           </Text>
@@ -59,6 +59,11 @@ export default async function Dashboard() {
             </Button>
           </Flex>
         </Card>
+        {/*  <Card className="p-6">
+          <Flex direction="column" gap="3">
+          <QuickStats stats={stats}/>
+          </Flex>
+        </Card> */}
       </div>
 
       {/* User Info Debug */}
@@ -67,17 +72,17 @@ export default async function Dashboard() {
           <Heading size="4">🔍 Your Session Info</Heading>
           <div className="bg-gray-50 p-4 rounded border text-sm space-y-1">
             <p>
-              <strong>User ID:</strong> {session.user?.id}
+              <strong>User ID:</strong> {session!.user?.id}
             </p>
             <p>
-              <strong>Name:</strong> {session.user?.name}
+              <strong>Name:</strong> {session!.user?.name}
             </p>
             <p>
-              <strong>Email:</strong> {session.user?.email}
+              <strong>Email:</strong> {session!.user?.email}
             </p>
             <p>
               <strong>Has Profile Image:</strong>{" "}
-              {session.user?.image ? "Yes" : "No"}
+              {session!.user?.image ? "Yes" : "No"}
             </p>
           </div>
         </Flex>
