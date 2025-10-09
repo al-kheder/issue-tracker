@@ -2,6 +2,7 @@ import { Section, Button } from "@radix-ui/themes";
 import Link from "next/link";
 import DeleteButton from "./DeletButton";
 import IssuesButton from "./IssuesButton";
+import AssigneeSelect from "./AssigneeSelect";
 
 interface IssueActionsProps {
   issueId: number;
@@ -30,6 +31,9 @@ export function IssueActions({ issueId }: IssueActionsProps) {
       {/* Delete Button */}
 
       <DeleteButton issueId={issueId} />
+
+      {/* Assign Button */}
+      <AssigneeSelect />
     </Section>
   );
 }
