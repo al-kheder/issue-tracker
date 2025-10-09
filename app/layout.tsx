@@ -7,6 +7,7 @@ import "./globals.css";
 
 import { auth } from "@/auth";
 import NavBar from "./NavBar";
+import QueryClientProvider from "./QueryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,16 +35,19 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         <QueryClientProvider>
+
         <SessionProvider
           session={seesion}
           refetchInterval={0} // Disable automatic refetch for better caching
           refetchOnWindowFocus={false}
-        >
+          >
           <Theme accentColor="blue">
             <NavBar />
             <main className="p-8">{children}</main>
           </Theme>
         </SessionProvider>
+          </QueryClientProvider>
       </body>
     </html>
   );

@@ -12,12 +12,13 @@ interface Props {
   }>;
 }
 
-const session = await auth();
+
 
 // DELETE ISSUE
 export async function DELETE(
     request:NextRequest,{params}:Props
 ){
+  const session = await auth();
 try {
    if(!session) return NextResponse.json({},{status:401})
   const { id } = await params;
@@ -50,6 +51,7 @@ export async function PATCH(
   { params }: Props
 ) {
   console.log("🔥 PATCH request received"); // ✅ Debug log
+  const session = await auth();
   
   try {
           if(!session) return NextResponse.json({},{status:401})
