@@ -13,15 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Issue {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
-  description String   @db.Text
-  status      Status   @default(OPEN)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
 enum Status {
   OPEN
   IN_PROGRESS
@@ -37,14 +28,26 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  assignedIssues Issue[]
+}
+
+model Issue {
+  id               Int      @id @default(autoincrement())
+  title            String   @db.VarChar(255)
+  description      String   @db.Text
+  status           Status   @default(OPEN)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  assignedToUserId String?  @db.VarChar(255)
+  assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 }
 
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String 
+  userId                   String
   type                     String
   provider                 String
   providerAccountId        String
