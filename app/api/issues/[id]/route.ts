@@ -5,6 +5,7 @@ import { updateIssueSchema } from "@/lib/validations";
 import { getIssueById, validateIssueId } from "@/lib/data/issue";
 import { issue } from "@uiw/react-md-editor";
 import { auth } from "@/auth";
+import { error } from "console";
 
 interface Props {
   params: Promise<{  // ✅ Add Promise here too
@@ -51,10 +52,10 @@ export async function PATCH(
   { params }: Props
 ) {
   console.log("🔥 PATCH request received"); // ✅ Debug log
-  const session = await auth();
+/*   const session = await auth(); */
   
   try {
-          if(!session) return NextResponse.json({},{status:401})
+    /*  if(!session) return NextResponse.json({},{status:401}) */
     const { id } = await params;
     const issueId = validateIssueId(id)
     if(!issueId)
@@ -78,6 +79,14 @@ export async function PATCH(
     }
 
     console.log("✅ Validation passed:", validation.data); // ✅ Debug log
+
+    // find user
+     const {assignedToUserId} =body;
+    if(assignedToUserId){
+     const user =  await prisma.user.findUnique({where:{id:assignedToUserId}})
+     if (!user) return NextResponse.json({error:"Invalid user."},{status:400})
+
+    } 
 
     // ✅ Check if issue exists
     const existingIssue =getIssueById(issueId)

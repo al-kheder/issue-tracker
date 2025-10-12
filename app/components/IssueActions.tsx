@@ -3,12 +3,13 @@ import Link from "next/link";
 import DeleteButton from "./DeletButton";
 import IssuesButton from "./IssuesButton";
 import AssigneeSelect from "./AssigneeSelect";
+import { issue } from "@uiw/react-md-editor";
 
 interface IssueActionsProps {
-  issueId: number;
+  issue: any;
 }
 
-export function IssueActions({ issueId }: IssueActionsProps) {
+export function IssueActions({ issue }: IssueActionsProps) {
   return (
     <Section className="flex flex-wrap gap-4">
       {/* Edit Button */}
@@ -26,14 +27,14 @@ export function IssueActions({ issueId }: IssueActionsProps) {
             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
           />
         </svg>
-        <Link href={`/issues/${issueId}/edit`}>Edit Issue</Link>
+        <Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
       </Button>
       {/* Delete Button */}
 
-      <DeleteButton issueId={issueId} />
+      <DeleteButton issueId={issue.id} />
 
       {/* Assign Button */}
-      <AssigneeSelect />
+      <AssigneeSelect issue={issue} currentAssigneeId={"none"} />
     </Section>
   );
 }

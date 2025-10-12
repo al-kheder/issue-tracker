@@ -7,7 +7,6 @@ export function validateIssueId(id: string): number {
   if (isNaN(issueId) || issueId <= 0) {
     notFound();
   }
-  
   return issueId;
 }
 

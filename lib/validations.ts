@@ -37,6 +37,11 @@ export const updateIssueSchema = z.object({
   status: z
     .enum(["OPEN", "IN_PROGRESS", "CLOSED"])
     .optional(),
+
+  assignedToUserId: z
+  .string()
+  .optional()
+  .nullable()
 });
 
 export type UpdateIssueData = z.infer<typeof updateIssueSchema>;

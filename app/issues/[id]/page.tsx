@@ -40,7 +40,7 @@ const IssueDetailsPage = async ({ params }: Props) => {
         <IssueDescription description={issueDetail.description} />
 
         {/* Action Buttons */}
-        <IssueActions issueId={issueDetail.id} />
+        <IssueActions issue = {issueDetail}/>
       </Container>
     </Box>
   );
