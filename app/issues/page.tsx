@@ -22,6 +22,16 @@ const IssuesPage = async ({
 }: {
   searchParams: Promise<{ status?: Status; orderBy: keyof Issue }>;
 }) => {
+  const columns: {
+    label: string;
+    value: keyof Issue;
+    className?: string;
+  }[] = [
+    { label: "Issue", value: "title" },
+    { label: "Status", value: "status", className: "hidden md:table-cell" },
+    { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  ];
+
   const resolvedSearchParams = await searchParams;
   console.log(" search params", resolvedSearchParams.status);
 
@@ -33,22 +43,17 @@ const IssuesPage = async ({
       : undefined;
 
   const whereClause = statusFilter ? { status: statusFilter } : {};
-  console.log("Where clause:", whereClause);
+
+  const orderBy = columns
+    .map((column) => column.value)
+    .includes(resolvedSearchParams.orderBy)
+    ? { [resolvedSearchParams.orderBy]: "asc" }
+    : undefined;
 
   const issues = await prisma.issue.findMany({
     where: whereClause,
-    orderBy: { createdAt: "desc" },
+    orderBy,
   });
-
-  const columns: {
-    label: string;
-    value: keyof Issue;
-    className?: string;
-  }[] = [
-    { label: "Issue", value: "title" },
-    { label: "Status", value: "status", className: "hidden md:table-cell" },
-    { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
-  ];
 
   await delay(500);
 
