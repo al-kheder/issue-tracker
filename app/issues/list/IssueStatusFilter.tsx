@@ -13,6 +13,9 @@ const statuses: { label: string; value?: Status | "ALL" }[] = [
 
 const IssueStatusFilter = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentValue = searchParams.get("status");
 
   return (
     <Select.Root
@@ -20,6 +23,7 @@ const IssueStatusFilter = () => {
         const query = status ? `?status=${status}` : "";
         router.push("/issues" + query);
       }}
+      defaultValue={currentValue!}
     >
       <Select.Trigger placeholder="Filter by status..." />
       <Select.Content>

@@ -1,10 +1,17 @@
 import React from "react";
 import { Section, Table } from "@radix-ui/themes";
 import prisma from "@/prisma/client";
-import { DemoBanner, IssueStatusBage, Link } from "@/app/components/index";
+import {
+  DemoBanner,
+  IssueStatusBage,
+  Link as NextLink,
+} from "@/app/components/index";
 import delay from "delay";
 import IssueActions from "./IssueActions";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import Link from "next/link";
+import { keyof } from "zod";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
 /* interface Props {
   searchParams: { status: Status };
@@ -13,46 +20,61 @@ import { Status } from "@prisma/client";
 const IssuesPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: Status }>;
+  searchParams: Promise<{ status?: Status; orderBy: keyof Issue }>;
 }) => {
- 
   const resolvedSearchParams = await searchParams;
-  console.log(' search params', resolvedSearchParams.status)
+  console.log(" search params", resolvedSearchParams.status);
 
-   const validStatuses: Status[] = ["OPEN", "CLOSED", "IN_PROGRESS"];
-  const statusFilter = resolvedSearchParams.status && validStatuses.includes(resolvedSearchParams.status as Status)
-    ? (resolvedSearchParams.status as Status)
-    : undefined;
+  const validStatuses: Status[] = ["OPEN", "CLOSED", "IN_PROGRESS"];
+  const statusFilter =
+    resolvedSearchParams.status &&
+    validStatuses.includes(resolvedSearchParams.status as Status)
+      ? (resolvedSearchParams.status as Status)
+      : undefined;
 
   const whereClause = statusFilter ? { status: statusFilter } : {};
   console.log("Where clause:", whereClause);
 
-  const issues = await prisma.issue.findMany(
-    {
-      where:whereClause,
-      orderBy:{createdAt:"desc"}
-    }
-  );
+  const issues = await prisma.issue.findMany({
+    where: whereClause,
+    orderBy: { createdAt: "desc" },
+  });
 
-
+  const columns: {
+    label: string;
+    value: keyof Issue;
+    className?: string;
+  }[] = [
+    { label: "Issue", value: "title" },
+    { label: "Status", value: "status", className: "hidden md:table-cell" },
+    { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  ];
 
   await delay(500);
 
   return (
     <>
-        <IssueActions />
-  
-
+      <IssueActions />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell>
+            {columns.map((column) => (
+              <Table.ColumnHeaderCell
+                key={column.label}
+                className={column.className}
+              >
+                <Link
+                  href={{
+                    query: { ...resolvedSearchParams, orderBy: column.value },
+                  }}
+                >
+                  {column.label}
+                  {column.value === resolvedSearchParams.orderBy && (
+                    <ArrowUpIcon className="inline" />
+                  )}
+                </Link>
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
 
@@ -70,7 +92,9 @@ const IssuesPage = async ({
             issues.map((issue) => (
               <Table.Row key={issue.id}>
                 <Table.RowHeaderCell>
-                  <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                  <NextLink href={`/issues/${issue.id}`}>
+                    {issue.title}
+                  </NextLink>
                   <div className="block md:hidden">
                     <IssueStatusBage status={issue.status} />
                   </div>
@@ -86,12 +110,11 @@ const IssuesPage = async ({
           )}
         </Table.Body>
       </Table.Root>
-         {/* 🔧 Show current filter */}
+      {/* 🔧 Show current filter */}
       <div className="mt-2 text-sm text-gray-600">
-        {statusFilter 
+        {statusFilter
           ? `Filtering by: ${statusFilter} (${issues.length} found)`
-          : `Showing all issues (${issues.length} total)`
-        }
+          : `Showing all issues (${issues.length} total)`}
       </div>
       <Section>
         <DemoBanner />
