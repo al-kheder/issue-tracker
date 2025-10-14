@@ -4,13 +4,45 @@ import prisma from "@/prisma/client";
 import { DemoBanner, IssueStatusBage, Link } from "@/app/components/index";
 import delay from "delay";
 import IssueActions from "./IssueActions";
+import { Status } from "@prisma/client";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+/* interface Props {
+  searchParams: { status: Status };
+} */
+
+const IssuesPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: Status }>;
+}) => {
+ 
+  const resolvedSearchParams = await searchParams;
+  console.log(' search params', resolvedSearchParams.status)
+
+   const validStatuses: Status[] = ["OPEN", "CLOSED", "IN_PROGRESS"];
+  const statusFilter = resolvedSearchParams.status && validStatuses.includes(resolvedSearchParams.status as Status)
+    ? (resolvedSearchParams.status as Status)
+    : undefined;
+
+  const whereClause = statusFilter ? { status: statusFilter } : {};
+  console.log("Where clause:", whereClause);
+
+  const issues = await prisma.issue.findMany(
+    {
+      where:whereClause,
+      orderBy:{createdAt:"desc"}
+    }
+  );
+
+
+
   await delay(500);
+
   return (
     <>
-      <IssueActions />
+        <IssueActions />
+  
+
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
@@ -25,8 +57,17 @@ const IssuesPage = async () => {
         </Table.Header>
 
         <Table.Body>
-          {issues.map((issue) => {
-            return (
+          {issues.length === 0 ? (
+            <Table.Row>
+              <Table.Cell
+                colSpan={3}
+                className="text-center py-8 text-gray-500"
+              >
+                No issues found for this filter
+              </Table.Cell>
+            </Table.Row>
+          ) : (
+            issues.map((issue) => (
               <Table.Row key={issue.id}>
                 <Table.RowHeaderCell>
                   <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
@@ -41,18 +82,23 @@ const IssuesPage = async () => {
                   {issue.createdAt.toDateString()}
                 </Table.Cell>
               </Table.Row>
-            );
-          })}
+            ))
+          )}
         </Table.Body>
       </Table.Root>
+         {/* 🔧 Show current filter */}
+      <div className="mt-2 text-sm text-gray-600">
+        {statusFilter 
+          ? `Filtering by: ${statusFilter} (${issues.length} found)`
+          : `Showing all issues (${issues.length} total)`
+        }
+      </div>
       <Section>
         <DemoBanner />
       </Section>
     </>
   );
 };
-
 export const dynamic = "force-dynamic";
-/* export const revalidate = 0; */
-
+export const revalidate = 0;
 export default IssuesPage;
