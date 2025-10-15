@@ -12,6 +12,7 @@ import { Issue, Status } from "@prisma/client";
 import Link from "next/link";
 import { keyof } from "zod";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import Paginations from "../components/Paginations";
 
 /* interface Props {
   searchParams: { status: Status };
@@ -116,6 +117,7 @@ const IssuesPage = async ({
         </Table.Body>
       </Table.Root>
       {/* 🔧 Show current filter */}
+        <Paginations itemCount={100} pageSize={10} currentPage={2}/>
       <div className="mt-2 text-sm text-gray-600">
         {statusFilter
           ? `Filtering by: ${statusFilter} (${issues.length} found)`
