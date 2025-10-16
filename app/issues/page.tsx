@@ -1,11 +1,10 @@
-import React from "react";
-import { Section, Text } from "@radix-ui/themes";
-import prisma from "@/prisma/client";
 import { DemoBanner } from "@/app/components/index";
-import delay from "delay";
-import IssueActions from "./IssueActions";
+import prisma from "@/prisma/client";
 import { Status } from "@prisma/client";
+import { Section, Text } from "@radix-ui/themes";
+import delay from "delay";
 import Paginations from "../components/Paginations";
+import IssueActions from "./IssueActions";
 import IssueTable from "./list/IssueTable"; // 🔧 Import the new component
 
 const IssuesPage = async ({
@@ -58,27 +57,17 @@ const IssuesPage = async ({
     }),
   ]);
 
-  await delay(500);
+  await delay(200);
 
   return (
     <>
       <IssueActions />
-
       <IssueTable issues={issues} searchParams={resolvedSearchParams} />
-
       <Paginations
         itemCount={totalCount}
         pageSize={pageSize}
         currentPage={page}
       />
-
-      <Text className="mt-2 text-sm text-gray-600">
-        {statusFilter
-          ? `Filtering by: ${statusFilter} (${issues.length} of ${totalCount} found)`
-          : `Showing all issues (${totalCount} total)`}
-        {orderByColumn !== "createdAt" && ` • Sorted by: ${orderByColumn}`}
-      </Text>
-
       <Section>
         <DemoBanner />
       </Section>
