@@ -10,18 +10,17 @@ import delay from "delay";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
 import Link from "next/link";
-import { keyof } from "zod";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import Paginations from "../components/Paginations";
-
-/* interface Props {
-  searchParams: { status: Status };
-} */
 
 const IssuesPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: Status; orderBy: keyof Issue }>;
+  searchParams: Promise<{
+    status?: string;
+    orderBy?: string;
+    page?: string;
+  }>;
 }) => {
   const columns: {
     label: string;
@@ -34,29 +33,62 @@ const IssuesPage = async ({
   ];
 
   const resolvedSearchParams = await searchParams;
-  console.log(" search params", resolvedSearchParams.status);
+  console.log("Search params:", resolvedSearchParams);
 
+ 
   const validStatuses: Status[] = ["OPEN", "CLOSED", "IN_PROGRESS"];
-  const statusFilter =
-    resolvedSearchParams.status &&
+  const statusFilter = resolvedSearchParams.status && 
     validStatuses.includes(resolvedSearchParams.status as Status)
-      ? (resolvedSearchParams.status as Status)
-      : undefined;
-
-  const whereClause = statusFilter ? { status: statusFilter } : {};
-
-  const orderBy = columns
-    .map((column) => column.value)
-    .includes(resolvedSearchParams.orderBy)
-    ? { [resolvedSearchParams.orderBy]: "asc" }
+    ? (resolvedSearchParams.status as Status)
     : undefined;
 
-  const issues = await prisma.issue.findMany({
-    where: whereClause,
-    orderBy,
-  });
+  const validOrderByColumns = ["title", "status", "createdAt"];
+  const orderByColumn = resolvedSearchParams.orderBy && 
+    validOrderByColumns.includes(resolvedSearchParams.orderBy)
+    ? resolvedSearchParams.orderBy as keyof Issue
+    : "createdAt";
 
+  const whereClause = statusFilter ? { status: statusFilter } : {};
+  const orderBy = { [orderByColumn]: "desc" };
+
+  const pageParam = resolvedSearchParams.page;
+  const page = pageParam && !isNaN(parseInt(pageParam)) ? parseInt(pageParam) : 1;
+  const pageSize = 10;
+
+
+  const skip = Math.max(0, (page - 1) * pageSize); // Ensure non-negative
+
+  console.log("Pagination values:", { page, pageSize, skip }); // Debug log
+
+  // 🔧 Get both issues and total count with explicit skip value
+  const [issues, totalCount] = await Promise.all([
+    prisma.issue.findMany({
+      where: whereClause,
+      orderBy,
+      skip: skip,           // 🔧 Explicit skip value
+      take: pageSize,
+    }),
+    prisma.issue.count({
+      where: whereClause,
+    })
+  ]);
+  
   await delay(500);
+
+  const buildSortUrl = (columnValue: keyof Issue) => {
+    const params = new URLSearchParams();
+    
+    if (resolvedSearchParams.status) {
+      params.set('status', resolvedSearchParams.status);
+    }
+    if (page > 1) {
+      params.set('page', page.toString());
+    }
+
+    params.set('orderBy', columnValue);
+    
+    return `/issues?${params.toString()}`;
+  };
 
   return (
     <>
@@ -69,14 +101,13 @@ const IssuesPage = async ({
                 key={column.label}
                 className={column.className}
               >
-                <Link
-                  href={{
-                    query: { ...resolvedSearchParams, orderBy: column.value },
-                  }}
+                <Link 
+                  href={buildSortUrl(column.value)}
+                  className="hover:text-blue-600 transition-colors"
                 >
                   {column.label}
-                  {column.value === resolvedSearchParams.orderBy && (
-                    <ArrowUpIcon className="inline" />
+                  {orderByColumn === column.value && (
+                    <ArrowUpIcon className="inline ml-1" />
                   )}
                 </Link>
               </Table.ColumnHeaderCell>
@@ -116,19 +147,27 @@ const IssuesPage = async ({
           )}
         </Table.Body>
       </Table.Root>
-      {/* 🔧 Show current filter */}
-        <Paginations itemCount={100} pageSize={10} currentPage={2}/>
+      
+      <Paginations
+        itemCount={totalCount}
+        pageSize={pageSize}
+        currentPage={page}
+      />
+      
       <div className="mt-2 text-sm text-gray-600">
         {statusFilter
-          ? `Filtering by: ${statusFilter} (${issues.length} found)`
-          : `Showing all issues (${issues.length} total)`}
+          ? `Filtering by: ${statusFilter} (${issues.length} of ${totalCount} found)`
+          : `Showing all issues (${totalCount} total)`}
+        {orderByColumn !== "createdAt" && ` • Sorted by: ${orderByColumn}`}
       </div>
+      
       <Section>
         <DemoBanner />
       </Section>
     </>
   );
 };
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export default IssuesPage;
