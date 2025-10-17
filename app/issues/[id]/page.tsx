@@ -29,8 +29,9 @@ const IssueDetailsPage = async ({ params }: Props) => {
     <Box className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl">
       <Container className="max-w-6xl mx-auto px-4 py-4">
         {/* Back Button */}
-        <div>
+        <div className="flex align-center justify-items-start gap-4">
           <IssuesButton url="issues" urlTitle="Issues"/>
+          <IssuesButton url="dashboard" urlTitle="Dashboard"/>
         </div>
 
         {/* Hero Section */}

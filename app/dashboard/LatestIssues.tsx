@@ -15,6 +15,7 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
+import IssueStatusBadge from "../components/IssueStatusBage";
 
 const LatestIssues = async () => {
   const isseues = await prisma.issue.findMany({
@@ -91,16 +92,8 @@ const LatestIssues = async () => {
                     {issue.description.slice(0, 40) + "..."}
                   </Text>
                 </Box>
-                <Flex align="center" gap="1">
-                  <Text color={statusProps.color}>{statusProps.icon}</Text>
-                  <Text
-                    as="div"
-                    size="2"
-                    color={statusProps.color}
-                    weight="medium"
-                  >
-                    {statusProps.text}
-                  </Text>
+                <Flex align="center" gap="2">
+                  <IssueStatusBadge status={issue.status} />
                 </Flex>
               </Flex>
               <Flex align="end" justify="between" gap="2" direction="column">
@@ -118,9 +111,7 @@ const LatestIssues = async () => {
                   size="1"
                   className="hover:cursor-pointer"
                 >
-                    <Link href={""}>
-                  View
-                    </Link>
+                  <Link href={`/issues/${issue.id}`}>View</Link>
                 </Button>
               </Flex>
             </Flex>

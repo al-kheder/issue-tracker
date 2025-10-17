@@ -9,15 +9,13 @@ interface Props {
 }
 const IssuesButton = ({ url, urlTitle }: Props) => {
   return (
-    <Link href={"/" + url}>
-      <Button
-        variant="ghost"
-        className="flex items-center gap-2 hover:bg-gray-100 transition-colors"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        Back to {urlTitle}
-      </Button>
-    </Link>
+    <Button
+      variant="ghost"
+      className="flex items-center gap-2 hover:bg-gray-100 transition-colors hover:cursor-pointer"
+    >
+      <ArrowLeftIcon className="h-4 w-4" />
+      <Link href={"/" + url}>Back to {urlTitle}</Link>
+    </Button>
   );
 };
 
