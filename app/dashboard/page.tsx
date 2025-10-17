@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { QuickStats } from "../components/index";
 import LatestIssues from "./LatestIssues";
+import IssuesSummary from "./IssuesSummary";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -48,7 +49,6 @@ export default async function Dashboard() {
             </Button>
           </Flex>
         </Card>
-
         <Card className="p-6">
           <Flex direction="column" gap="3">
             <Heading size="4">👤 Your Profile</Heading>
@@ -60,15 +60,16 @@ export default async function Dashboard() {
             </Button>
           </Flex>
         </Card>
+
+        <IssuesSummary />
+
         {/*  <Card className="p-6">
           <Flex direction="column" gap="3">
           <QuickStats stats={stats}/>
           </Flex>
         </Card> */}
       </div>
-        <LatestIssues/>
-
-
+      <LatestIssues />
     </div>
   );
 }
