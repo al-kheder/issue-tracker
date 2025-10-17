@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const statuses: { label: string; value?: Status | "ALL" }[] = [
-  { label: "All", value: "ALL" }, // 🔧 Give "All" a value
+  { label: "All", value: "ALL" },
   { label: "Open", value: "OPEN" },
   { label: "Closed", value: "CLOSED" },
   { label: "In Progress", value: "IN_PROGRESS" },
@@ -15,7 +15,7 @@ const IssueStatusFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentValue = searchParams.get("status");
+  const currentValue = searchParams.get("status")|| 'ALL';
 
   return (
     <Select.Root

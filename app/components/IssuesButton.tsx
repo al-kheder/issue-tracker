@@ -3,15 +3,19 @@ import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
 
-const IssuesButton = () => {
+interface Props {
+  url: string;
+  urlTitle: string;
+}
+const IssuesButton = ({ url, urlTitle }: Props) => {
   return (
-    <Link href="/issues">
+    <Link href={"/" + url}>
       <Button
         variant="ghost"
         className="flex items-center gap-2 hover:bg-gray-100 transition-colors"
       >
         <ArrowLeftIcon className="h-4 w-4" />
-        Back to Issues
+        Back to {urlTitle}
       </Button>
     </Link>
   );

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { QuickStats } from "../components/index";
+import LatestIssues from "./LatestIssues";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -65,28 +66,9 @@ export default async function Dashboard() {
           </Flex>
         </Card> */}
       </div>
+        <LatestIssues/>
 
-      {/* User Info Debug */}
-      <Card className="p-6">
-        <Flex direction="column" gap="3">
-          <Heading size="4">🔍 Your Session Info</Heading>
-          <div className="bg-gray-50 p-4 rounded border text-sm space-y-1">
-            <p>
-              <strong>User ID:</strong> {session!.user?.id}
-            </p>
-            <p>
-              <strong>Name:</strong> {session!.user?.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {session!.user?.email}
-            </p>
-            <p>
-              <strong>Has Profile Image:</strong>{" "}
-              {session!.user?.image ? "Yes" : "No"}
-            </p>
-          </div>
-        </Flex>
-      </Card>
+
     </div>
   );
 }

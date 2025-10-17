@@ -30,7 +30,7 @@ const IssueDetailsPage = async ({ params }: Props) => {
       <Container className="max-w-6xl mx-auto px-4 py-4">
         {/* Back Button */}
         <div>
-          <IssuesButton />
+          <IssuesButton url="issues" urlTitle="Issues"/>
         </div>
 
         {/* Hero Section */}
