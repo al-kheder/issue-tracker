@@ -35,8 +35,9 @@ const MinimalIssueSummary = async () => {
       <Flex direction="column" gap="3">
         <Text size="3" weight="bold" style={{ textAlign: "center" }}>
           📋 Issue Summary (
-          {stats.reduce((total, { count }) => total + count, 0)})
-          
+          <Link href="/issues?status=ALL">
+            {stats.reduce((total, { count }) => total + count, 0)})
+          </Link>
         </Text>
 
         <Flex justify="between" gap="2">

@@ -1,5 +1,10 @@
 import prisma from "@/prisma/client";
 import {
+  CheckCircledIcon,
+  ClockIcon,
+  DotFilledIcon,
+} from "@radix-ui/react-icons";
+import {
   Avatar,
   Box,
   Button,
@@ -8,11 +13,6 @@ import {
   Heading,
   Text,
 } from "@radix-ui/themes";
-import {
-  DotFilledIcon,
-  CheckCircledIcon,
-  ClockIcon,
-} from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
 import IssueStatusBadge from "../components/IssueStatusBage";
@@ -63,7 +63,7 @@ const LatestIssues = async () => {
 
   console.log(isseues);
   return (
-    <Box maxWidth="400px">
+    <Box maxWidth="100%">
       <Heading
         align="center"
         style={{
@@ -81,9 +81,9 @@ const LatestIssues = async () => {
         const statusProps = getStatusDisplay(issue.status);
 
         return (
-          <Card mb="2" key={issue.id}>
+          <Card mb="2" key={issue.id} size="2">
             <Flex gap="1" justify="between">
-              <Flex direction="column" justify="between">
+              <Flex direction="column" justify="between" gap="4">
                 <Box>
                   <Text as="div" size="2" weight="bold">
                     {issue.title}
