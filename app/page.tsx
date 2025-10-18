@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Card, Flex, Heading, Text, Button } from "@radix-ui/themes";
+import { Metadata } from "next";
 
 export default async function HomePage() {
   const session = await auth();
@@ -214,3 +215,70 @@ export default async function HomePage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://example.com"),
+  applicationName: "Issue Tracker",
+  title: {
+    default: "Issue Tracker – Track, Prioritize, and Resolve Faster",
+    template: "%s | Issue Tracker",
+  },
+  description:
+    "Log bugs, assign teammates, prioritize work, and ship fixes. Simple to start, powerful enough to scale.",
+  keywords: [
+    "issue tracker",
+    "bug tracking",
+    "task management",
+    "project management",
+    "software development",
+    "QA",
+    "sprint planning",
+    "kanban",
+  ],
+  authors: [{ name: "Issue Tracker Team" }],
+  creator: "Issue Tracker",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Issue Tracker",
+    title: "Issue Tracker – Track, Prioritize, and Resolve Faster",
+    description:
+      "Log bugs, assign teammates, prioritize work, and ship fixes. Simple to start, powerful enough to scale.",
+    images: [
+      {
+        url: "/og/home.png",
+        width: 1200,
+        height: 630,
+        alt: "Issue Tracker – Faster Together",
+      },
+    ],
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Issue Tracker – Track, Prioritize, and Resolve Faster",
+    description:
+      "Log bugs, assign teammates, prioritize work, and ship fixes. Simple to start, powerful enough to scale.",
+    images: ["/og/home.png"],
+    creator: "@your_twitter",
+  },
+  icons: {
+    icon: [{ url: "/favicon.ico" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
+    shortcut: ["/favicon.ico"],
+  },
+};

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import IssueChart from "./IssueChart";
 import LatestIssues from "./LatestIssues";
 import MinimalIssueSummary from "./MinimalIssueSummary";
+import { Metadata } from "next";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -120,3 +121,66 @@ export default async function Dashboard() {
     );
   }
 }
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  ),
+  title: {
+    default: "Dashboard | Issue Tracker",
+    template: "%s | Issue Tracker",
+  },
+  description:
+    "Personal dashboard with issue stats, latest activity, and quick actions.",
+  keywords: [
+    "issue tracker",
+    "bug tracker",
+    "issues",
+    "dashboard",
+    "project management",
+  ],
+  authors: [{ name: "Issue Tracker" }],
+  alternates: {
+    canonical: "/dashboard",
+  },
+  openGraph: {
+    title: "Dashboard | Issue Tracker",
+    description: "See open, in-progress, and closed issues at a glance.",
+    url: "/dashboard",
+    siteName: "Issue Tracker",
+    images: [
+      {
+        url: "/og/dashboard.png",
+        width: 1200,
+        height: 630,
+        alt: "Issue Tracker Dashboard",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dashboard | Issue Tracker",
+    description: "Your issue stats and latest activity.",
+    creator: "@your_handle",
+    images: ["/og/dashboard.png"],
+  },
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  themeColor: "#0F172A",
+};

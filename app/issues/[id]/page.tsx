@@ -5,7 +5,9 @@ import {
   IssueActions,
 } from "@/app/components/index";
 import { validateIssueId, getIssueById } from "@/lib/data/issue";
+import prisma from "@/prisma/client";
 import { Box, Container } from "@radix-ui/themes";
+import { Description } from "@radix-ui/themes/components/alert-dialog";
 import delay from "delay";
 
 interface Props {
@@ -16,8 +18,6 @@ interface Props {
 }
 
 const IssueDetailsPage = async ({ params }: Props) => {
-  // ✅ Don't destructure here
-  // ✅ AWAIT params first, then destructure
   const { id } = await params;
 
   // ✅ Rest of your code stays the same
@@ -30,8 +30,8 @@ const IssueDetailsPage = async ({ params }: Props) => {
       <Container className="max-w-6xl mx-auto px-4 py-4">
         {/* Back Button */}
         <div className="flex align-center justify-items-start gap-4">
-          <IssuesButton url="issues" urlTitle="Issues"/>
-          <IssuesButton url="dashboard" urlTitle="Dashboard"/>
+          <IssuesButton url="issues" urlTitle="Issues" />
+          <IssuesButton url="dashboard" urlTitle="Dashboard" />
         </div>
 
         {/* Hero Section */}
@@ -41,10 +41,21 @@ const IssueDetailsPage = async ({ params }: Props) => {
         <IssueDescription description={issueDetail.description} />
 
         {/* Action Buttons */}
-        <IssueActions issue = {issueDetail}/>
+        <IssueActions issue={issueDetail} />
       </Container>
     </Box>
   );
 };
+
+export async function generateMetadata({ params }: Props) {
+  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt((await params).id) },
+  });
+
+  return {
+    title: issue?.title,
+    description: "Details of issue" + issue?.id,
+  };
+}
 
 export default IssueDetailsPage;

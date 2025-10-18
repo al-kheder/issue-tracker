@@ -6,6 +6,7 @@ import delay from "delay";
 import Paginations from "../components/Paginations";
 import IssueActions from "./IssueActions";
 import IssueTable from "./list/IssueTable"; // 🔧 Import the new component
+import type { Metadata } from "next";
 
 const IssuesPage = async ({
   searchParams,
@@ -78,3 +79,55 @@ const IssuesPage = async ({
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export default IssuesPage;
+
+
+export const metadata: Metadata = {
+  title: {
+    default: "Issues",
+    template: "%s | Issue Tracker",
+  },
+  description:
+    "Browse, filter, and manage issues with sorting and pagination.",
+  keywords: [
+    "issue tracker",
+    "issues",
+    "bug tracking",
+    "project management",
+    "Next.js",
+    "Prisma",
+  ],
+  alternates: {
+    canonical: "/issues",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    title: "Issues | Issue Tracker",
+    description:
+      "Browse, filter, and manage issues with sorting and pagination.",
+    siteName: "Issue Tracker",
+    url: "/issues",
+    images: [
+      {
+        url: "/og-issues.png",
+        width: 1200,
+        height: 630,
+        alt: "Issue Tracker",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Issues | Issue Tracker",
+    description:
+      "Browse, filter, and manage issues with sorting and pagination.",
+    images: ["/og-issues.png"],
+  },
+};
