@@ -9,6 +9,7 @@ import prisma from "@/prisma/client";
 import { Box, Container } from "@radix-ui/themes";
 import { Description } from "@radix-ui/themes/components/alert-dialog";
 import delay from "delay";
+import { cache } from "react";
 
 interface Props {
   params: Promise<{
@@ -23,7 +24,7 @@ const IssueDetailsPage = async ({ params }: Props) => {
   // ✅ Rest of your code stays the same
   const issueId = validateIssueId(id);
   const issueDetail = await getIssueById(issueId);
-  await delay(500);
+  await delay(200);
 
   return (
     <Box className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl">
@@ -48,13 +49,11 @@ const IssueDetailsPage = async ({ params }: Props) => {
 };
 
 export async function generateMetadata({ params }: Props) {
-  const issue = await prisma.issue.findUnique({
-    where: { id: parseInt((await params).id) },
-  });
-
+  const issueId = validateIssueId((await params).id);
+  const issue = getIssueById(issueId);
   return {
-    title: issue?.title,
-    description: "Details of issue" + issue?.id,
+    title: (await issue).title,
+    description: "Details of issue" + (await issue).id,
   };
 }
 
