@@ -12,7 +12,7 @@ const page = async () => {
   return (
     <Card className="p-6">
       <Flex direction="column" gap="3">
-        <Heading size="4">🔍 Your Session Info</Heading>
+        <Heading size="4">🔍 Your Session Info </Heading>
         <div className="bg-gray-50 p-4 rounded border text-sm space-y-1">
           <p>
             <strong>User ID:</strong> {session!.user?.id}
