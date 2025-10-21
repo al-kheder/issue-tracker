@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma/client";
 import { Button, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import IssueChart from "./IssueChart";
 import LatestIssues from "./LatestIssues";
 import MinimalIssueSummary from "./MinimalIssueSummary";
-import { Metadata } from "next";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -79,11 +79,6 @@ export default async function Dashboard() {
           <MinimalIssueSummary />
         </div>
 
-        {/*  <Grid columns="2" gap="2">
-          <LatestIssues />
-          <IssueChart open={2} inProgress={13} closed={12} />
-        </Grid> */}
-        {/* Ultra responsive with more breakpoints */}
         <Grid
           columns={{
             initial: "1",
@@ -148,38 +143,7 @@ export const metadata: Metadata = {
     description: "See open, in-progress, and closed issues at a glance.",
     url: "/dashboard",
     siteName: "Issue Tracker",
-    images: [
-      {
-        url: "/og/dashboard.png",
-        width: 1200,
-        height: 630,
-        alt: "Issue Tracker Dashboard",
-      },
-    ],
     locale: "en_US",
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Dashboard | Issue Tracker",
-    description: "Your issue stats and latest activity.",
-    creator: "@your_handle",
-    images: ["/og/dashboard.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-      noimageindex: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
   },
 };
