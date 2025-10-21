@@ -18,7 +18,6 @@ const EditIssuePage = async ({ params }: Props) => {
   // ✅ Step 2: Get the current issue data from database
   const issue = await getIssueById(issueId);
 
-
   // ✅ Step 3: If issue doesn't exist, show 404
   if (!issue) {
     notFound();
@@ -30,7 +29,7 @@ const EditIssuePage = async ({ params }: Props) => {
       <Container className="max-w-4xl mx-auto px-4">
         {/* Back Button */}
         <div className="mb-6">
-          <IssuesButton />
+          <IssuesButton url="/issues" urlTitle="Issues" />
         </div>
 
         {/* Page Header */}
