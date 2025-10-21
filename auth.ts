@@ -12,6 +12,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt" 
   },
+   // Add cookie configuration for production
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
+    },
+    pkceCodeVerifier: {
+      name: `next-auth.pkce.code_verifier`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 15 * 60 // 15 minutes
+      }
+    }
+  },
 
   callbacks: {
     authorized({ auth, request }) {
@@ -35,6 +57,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true
     },
 
+
+    
     // JWT callback for JWT strategy
     async jwt({ token, account, user }) {
       if (account && user) {
