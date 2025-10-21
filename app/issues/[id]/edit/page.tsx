@@ -27,7 +27,7 @@ const EditIssuePage = async ({ params }: Props) => {
   return (
     <Box className="min-h-screen bg-gray-50 py-8">
       <Container className="max-w-4xl mx-auto px-4">
-        {/* Back Button */}
+        {/* Back Button  edit page*/}
         <div className="mb-6">
           <IssuesButton url="/issues" urlTitle="Issues" />
         </div>
