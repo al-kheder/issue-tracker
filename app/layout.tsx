@@ -18,7 +18,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 export const metadata: Metadata = {
   title: "issues tracker App",
   description: "issues tracker to keep your Productivity ",
